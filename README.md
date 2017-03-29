@@ -15,3 +15,4 @@ Step-3: Enter DBPassword, DBUser
 Step-4: Select the KeyName existing
 
 References:http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cfn-sample-templates.html
+           http://github.com/opscode/chef-repo/tarball/master
