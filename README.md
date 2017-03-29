@@ -7,6 +7,9 @@ Approach: Created Ec2 Instance and new VPC and created the chef-cookbooks in loc
 
 
 Step-1: Use the CloudFormationWP.JSON to create the stack in EC2.
+
 Step-2: Enter Stack Name
+
 Step-3: Enter DBPassword, DBUser
+
 Step-4: Select the KeyName existing
