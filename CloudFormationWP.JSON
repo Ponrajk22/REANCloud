@@ -590,7 +590,7 @@
                 }
               },
               "05_configure_node_run_list": {
-                "command": "knife node run_list add -z `knife node list -z` recipe[default]",
+                "command": "knife node run_list add -z `knife node list -z` recipe[wordpress]",
                 "cwd": "/var/chef/chef-repo",
                 "env": {
                   "HOME": "/var/chef"
