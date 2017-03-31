@@ -79,16 +79,16 @@
   "Mappings": {
     "RegionMap": {
       "us-east-1": {
-        "AMI": "ami-f4cc1de2"
+        "AMI": "ami-6869aa05"
       },
       "us-east-2": {
-        "AMI": "ami-fcc19b99"
+        "AMI": "ami-c55673a0"
       },
       "us-west-1": {
-        "AMI": "ami-16efb076"
+        "AMI": "ami-165a0876"
       },
       "us-west-2": {
-        "AMI": "ami-a58d0dc5"
+        "AMI": "ami-f173cc91"
       }
     }
   },  
@@ -397,13 +397,11 @@
                     [
                       "[cfn-auto-reloader-hook]\n",
                       "triggers=post.update\n",
-                      "path=Resources.LaunchConfig.Metadata.AWS::CloudFormation::Init\n",
                       "action=/opt/aws/bin/cfn-init -v ",
                       "         --stack ",
                       {
                         "Ref": "AWS::StackName"
                       },
-                      "         --resource LaunchConfig ",
                       "         --configsets wordpress_install ",
                       "         --region ",
                       {
@@ -502,7 +500,7 @@
                   "Fn::Join": [
                     "",
                     [
-                      "cookbook_path [ '/var/chef/chef-repo/cookbooks/wordpress-cookbook/berks-cookbooks' ]\n",
+                      "cookbook_path [ '/var/chef/chef-repo/cookbooks/wordpress/berks-cookbooks' ]\n",
                       "node_path [ '/var/chef/chef-repo/nodes' ]\n"
                     ]
                   ]
@@ -516,7 +514,7 @@
                   "Fn::Join": [
                     "",
                     [
-                      "cookbook_path [ '/var/chef/chef-repo/cookbooks/wordpress-cookbook/berks-cookbooks' ]\n",
+                      "cookbook_path [ '/var/chef/chef-repo/cookbooks/wordpress/berks-cookbooks' ]\n",
                       "node_path [ '/var/chef/chef-repo/nodes' ]\n"
                     ]
                   ]
@@ -525,7 +523,7 @@
                 "owner": "root",
                 "group": "root"
               },
-              "/var/chef/chef-repo/cookbooks/wordpress-cookbook/attributes/default.rb": {
+              "/var/chef/chef-repo/cookbooks/wordpress/attributes/default.rb": {
                 "content": {
                   "Fn::Join": [
                     "",
@@ -550,7 +548,7 @@
                         "Ref": "DBPort"
                       },
                       "'\n",
-                      "node['wordpress']['db']['name'] = '",
+                      "normal['wordpress']['db']['name'] = '",
                       {
                         "Ref": "DBName"
                       },
@@ -565,7 +563,7 @@
             },
             "commands": {
               "01_get_cookbook": {
-                "command": "knife cookbook site download wordpress",
+                "command": "knife cookbook site download wordpress 2.3.0",
                 "cwd": "/var/chef/chef-repo",
                 "env": {
                   "HOME": "/var/chef"
@@ -576,15 +574,15 @@
                 "cwd": "/var/chef/chef-repo/cookbooks"
               },
               "03_init_berkshelf": {
-                "command": "berks init /var/chef/chef-repo/cookbooks/wordpress-cookbook --skip-vagrant --skip-git",
-                "cwd": "/var/chef/chef-repo/cookbooks/wordpress-cookbook",
+                "command": "berks init /var/chef/chef-repo/cookbooks/wordpress --skip-vagrant --skip-git",
+                "cwd": "/var/chef/chef-repo/cookbooks/wordpress",
                 "env": {
                   "HOME": "/var/chef"
                 }
               },
               "04_vendorize_berkshelf": {
                 "command": "berks vendor",
-                "cwd": "/var/chef/chef-repo/cookbooks/wordpress-cookbook",
+                "cwd": "/var/chef/chef-repo/cookbooks/wordpress",
                 "env": {
                   "HOME": "/var/chef"
                 }
@@ -653,17 +651,15 @@
                 "yum install -y aws-cfn-bootstrap\n",
                 "# Install the files and packages from the metadata\n",
                 "/opt/aws/bin/cfn-init -v ",
-                "         --stack ",
-                {
-                  "Ref": "AWS::StackName"
-                },
+                "         --stack ", { "Ref" : "AWS::StackName" },
                 "         --resource WebServerInstance ",
-                "         --configsets Install ",
-                "         --region ",
-                {
-                  "Ref": "AWS::Region"
-                },
-                "\n"
+                "         --configsets wordpress_install ",
+                "         --region ", { "Ref" : "AWS::Region" },
+                "\n",
+                "/opt/aws/bin/cfn-signal -e $? ",
+                "         --stack ", { "Ref" : "AWS::StackName" },
+                "         --resource WebServerInstance ",
+                "         --region ", { "Ref" : "AWS::Region" }, "\n"
               ]
             ]
           }
